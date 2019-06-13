@@ -1,9 +1,28 @@
 pipeline {
     agent any
+    tools {
+        maven 'M3'
+    }
     stages {
-        stage('HelloWorld') {
+        stage('Checkout') {
             steps {
-                echo "Hello World!"
+            git 'https://github.com/mmpetarpeshev/myProject.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+                junit '**/target/surefire-reports/TEST-*.xml'
+            }
+        }
+        stage('Package') {
+            steps {
+                sh 'mvn package'
             }
         }
     }
